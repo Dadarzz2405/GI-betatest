@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<p>Welcome, {{ current_user.name }} ({{ current_user.role }})</p>
+
+<ul>
+    <li><a href="/create-session">Create Session</a></li>
+    <li><a href="/mark-attendance">Mark Attendance</a></li>
+    <li><a href="/member-list">Member List</a></li>
+    <li><a href="/add-member">Add Member</a></li>
+</ul>
+
+<a href="/logout">Logout</a>
+
+</body>
+</html>

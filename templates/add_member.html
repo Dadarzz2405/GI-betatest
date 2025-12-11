@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Member</title>
+</head>
+<body>
+
+<h2>Add New Member</h2>
+
+<form method="POST">
+
+    <label>Full Name</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Username</label><br>
+    <input type="text" name="username" required><br><br>
+
+    <label>Password</label><br>
+    <input type="password" name="password" required><br><br>
+
+    <label>Class (e.g. XI-2)</label><br>
+    <input type="text" name="class_name"><br><br>
+
+    <label>Role</label><br>
+    <select name="role" required>
+        <option value="member">Member</option>
+        <option value="admin">Admin</option>
+        <option value="ketua">Ketua</option>
+        <option value="pembina">Pembina</option>
+    </select><br><br>
+
+    <button type="submit">Create Account</button>
+</form>
+
+</body>
+</html>
