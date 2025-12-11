@@ -125,6 +125,61 @@ def attendance_mark():
 
     return render_template('attendance_mark.html', sessions=sessions, users=members)
 
+@app.route('/attendance-history')
+@login_required
+def attendance_history():
+
+    records = db.session.query(
+        Attendance,
+        Session.name.label('session_name'),
+        Session.date.label('session_date')
+    ).join(Session, Attendance.session_id == Session.id)\
+     .filter(Attendance.user_id == current_user.id).all()
+
+    summary = {
+        'present': sum(1 for r, _, _ in records if r.status=='present'),
+        'absent': sum(1 for r, _, _ in records if r.status=='absent'),
+        'excused': sum(1 for r, _, _ in records if r.status=='excused')
+    }
+
+    return render_template('attendance_history.html', records=records, summary=summary)
+
+@app.route('/attendance-history-admin')
+@login_required
+def attendance_history_admin():
+    if current_user.role not in ['admin', 'ketua', 'pembina']:
+        return "Access denied"
+    
+    users = User.query.filter(User.role=='member').all()
+    return render_template('attendance_history_admin.html', users=users)
+
+@app.route('/attendance-history-admin/<int:user_id>')
+@login_required
+def attendance_history_admin_view(user_id):
+    if current_user.role not in ['admin', 'ketua', 'pembina']:
+        return "Access denied"
+    
+    selected_user = User.query.get_or_404(user_id)
+
+    records = db.session.query(
+        Attendance,
+        Session.name.label('session_name'),
+        Session.date.label('session_date')
+    ).join(Session, Attendance.session_id == Session.id)\
+     .filter(Attendance.user_id == user_id).all()
+    
+    summary = {
+        'present': sum(1 for r, _, _ in records if r.status=='present'),
+        'absent': sum(1 for r, _, _ in records if r.status=='absent'),
+        'excused': sum(1 for r, _, _ in records if r.status=='excused')
+    }
+    return render_template('attendance_history_admin_view.html', user=selected_user, records=records, summary=summary)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     with app.app_context():

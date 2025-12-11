@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard</title>
+    <title>Member Dashboard</title>
 </head>
 <body>
 
-<h2>Admin Dashboard</h2>
+<h2>Member Dashboard</h2>
 
-<p>Welcome, {{ current_user.name }} ({{ current_user.role }})</p>
+<p>Welcome, {{ current_user.name }} (Member)</p>
 
 <ul>
-    <li><a href="{{ url_for('create_session') }}">Create Session</a></li>
-    <li><a href="{{ url_for('attendance_mark') }}">Mark Attendance</a></li>
-    <li><a href="{{ url_for('member_list') }}">Member List</a></li>
-    <li><a href="{{ url_for('add_member') }}">Add Member</a></li>
+    <li><a href="/attendance-history">My Attendance History</a></li>
+    <li><a href="/member-list">View Member List</a></li>
 </ul>
 
 <a href="/logout">Logout</a>

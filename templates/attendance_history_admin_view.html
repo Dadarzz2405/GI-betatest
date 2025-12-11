@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Attendance</title>
+    <title>Attendance: {{ user.name }}</title>
 </head>
 <body>
 
-<h2>My Attendance History</h2>
-
-<p>Total Present: {{ summary.present }} | Total Absent: {{ summary.absent }} | Total Excused: {{ summary.excused }}</p>
+<h2>Attendance History for {{ user.name }}</h2>
+<p>Class: {{ user.class_name }}</p>
+<p>Present: {{ summary.present }} | Absent: {{ summary.absent }} | Excused: {{ summary.excused }}</p>
 
 <table border="1" cellpadding="6">
     <tr>
