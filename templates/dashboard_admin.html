@@ -10,11 +10,12 @@
 <p>Welcome, {{ current_user.name }} ({{ current_user.role }})</p>
 
 <ul>
-    <li><a href="/create-session">Create Session</a></li>
-    <li><a href="/mark-attendance">Mark Attendance</a></li>
-    <li><a href="/member-list">Member List</a></li>
-    <li><a href="/add-member">Add Member</a></li>
+    <li><a href="{{ url_for('create_session') }}">Create Session</a></li>
+    <li><a href="{{ url_for('attendance_mark') }}">Mark Attendance</a></li>
+    <li><a href="{{ url_for('member_list') }}">Member List</a></li>
+    <li><a href="{{ url_for('add_member') }}">Add Member</a></li>
 </ul>
+
 
 <a href="/logout">Logout</a>
 

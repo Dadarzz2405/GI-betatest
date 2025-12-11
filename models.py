@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -16,9 +17,9 @@ class Session(db.Model):
     name = db.Column(db.String(150))
     date = db.Column(db.String(50))
 
-class attendance():
+class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    session_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer)
-    status = db.Column(db.String(50)) 
-    timestamp = db.Column(db.String(50))
+    session_id = db.Column(db.Integer, db.ForeignKey('session.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    status = db.Column(db.String(50))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)

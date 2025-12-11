@@ -3,8 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 import os
-from models import db, User
-import os
+from models import db, User, Session, Attendance
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -83,8 +82,52 @@ def member_list():
     users = User.query.all()
     return render_template('member_list.html', users=users)
 
+@app.route('/create-session', methods=['GET', 'POST'])
+@login_required
+def create_session():
+    if current_user.role not in ['admin', 'ketua', 'pembina']:
+        return "Access denied"
+    if request.method == 'POST':
+        name = request.form['name']
+        date = request.form['date']
+
+        new_session = Session(name=name, date=date)
+        db.session.add(new_session)
+        db.session.commit()
+        return redirect(url_for('dashboard_admin'))
+    return render_template('create_session.html')
+
+@app.route('/attendance-mark', methods=['GET', 'POST'])
+@login_required
+def attendance_mark():
+    if current_user.role not in ['admin', 'ketua', 'pembina']:
+        return "Access denied"
+    
+    sessions = Session.query.all()
+    members = User.query.filter(User.role=='member').all()
+
+    if request.method == 'POST':
+        session_id = int(request.form['session_id'])
+
+        from datetime import datetime
+        for user in members:
+            status = request.form.get(f'status_{user.id}')
+            if status:
+                new_attendance = Attendance(
+                    session_id=session_id,
+                    user_id=user.id,
+                    status=status,
+                    timestamp=datetime.now()  
+                )
+                db.session.add(new_attendance)
+        db.session.commit()
+        return "Attendance recorded successfully"
+
+    return render_template('attendance_mark.html', sessions=sessions, users=members)
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    port = int(os.environ.get("PORT", 5000))  # Use Render’s port or default to 5000
+    port = int(os.environ.get("PORT", 5000)) 
     app.run(host="0.0.0.0", port=port, debug=True)

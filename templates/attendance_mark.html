@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mark Attendance</title>
+</head>
+<body>
+
+<h2>Mark Attendance</h2>
+
+<form method="POST">
+    <label>Select Session:</label><br>
+    <select name="session_id" required>
+        {% for s in sessions %}
+        <option value="{{ s.id }}">{{ s.name }} — {{ s.date }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Name</th>
+            <th>Present</th>
+            <th>Absent</th>
+            <th>Excused</th>
+        </tr>
+
+        {% for u in users %}
+        <tr>
+            <td>{{ u.name }}</td>
+            <td><input type="radio" name="status_{{ u.id }}" value="present"></td>
+            <td><input type="radio" name="status_{{ u.id }}" value="absent"></td>
+            <td><input type="radio" name="status_{{ u.id }}" value="excused"></td>
+        </tr>
+        {% endfor %}
+    </table><br>
+
+    <button type="submit">Save Attendance</button>
+</form>
+
+</body>
+</html>
