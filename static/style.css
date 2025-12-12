@@ -1,0 +1,16 @@
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+.role-member { background-color: #6c757d; }
+.role-admin { background-color: #198754; }
+.role-ketua { background-color: #0d6efd; }
+.role-pembina { background-color: #6f42c1; }
+
+.table th {
+    background-color: #f8f9fa;
+}

@@ -2,23 +2,30 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
-<h2>Admin Dashboard</h2>
+<body class="bg-light">
 
-<p>Welcome, {{ current_user.name }} ({{ current_user.role }})</p>
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="fw-bold">Admin Dashboard</h2>
+        <p class="text-muted">Welcome, {{ current_user.name }} ({{ current_user.role|capitalize }})</p>
 
-<ul>
-    <li><a href="/create-session">Create Session</a></li>
-    <li><a href="/mark-attendance">Mark Attendance</a></li>
-    <li><a href="/member-list">Member List</a></li>
-    <li><a href="/add-member">Add Member</a></li>
-    <li><a href="/attendance-history">My Attendance History</a></li>
-    <li><a href="/attendance-history-admin">View Member Attendance</a></li>
-</ul>
+        <hr>
 
-<a href="/logout">Logout</a>
+        <div class="list-group">
+            <a href="/create-session" class="list-group-item list-group-item-action">📅 Create Session</a>
+            <a href="/mark-attendance" class="list-group-item list-group-item-action">📝 Mark Attendance</a>
+            <a href="/member-list" class="list-group-item list-group-item-action">👥 Member List</a>
+            <a href="/add-member" class="list-group-item list-group-item-action">➕ Add Member</a>
+            <a href="/attendance-history-admin" class="list-group-item list-group-item-action">📊 View Member Attendance</a>
+            <a href="/attendance-history" class="list-group-item list-group-item-action">📈 My Attendance History</a>
+        </div>
+
+        <a href="/logout" class="btn btn-danger mt-4">Logout</a>
+    </div>
+</div>
 
 </body>
 </html>
