@@ -95,13 +95,15 @@ Through this project, the developer gained experience in:
 * Attendance analytics and statistics
 * Role-based permission system
 * Mobile-responsive user interface
-* QR Code–based attendance system
 
 ## 👤 Developer
 
-**Your Name**
-Student | Aspiring Software & AI Engineer
-
+**Dadarzz**
 ---
-
+Haidar Ali Fawwaz Nasirodin
 This project was developed as a **school project and personal portfolio**, demonstrating practical application of web development concepts.
+
+## ⚠️ Notes & Limitations
+
+Please note that this project is **small in scale** and is **not yet capable of supporting larger or more complex activities**.
+It was developed primarily for learning purposes and basic Rohis management needs, and may require further development and optimization for broader or long-term use.
