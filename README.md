@@ -1,17 +1,25 @@
 # Rohis Management System
 
-A web-based **Rohis (Rohani Islam) Management System** designed to help administrators manage members, attendance, and activity records efficiently and digitally.
+The **Rohis Management System** is a web-based application developed to support the digital management of **Rohis (Rohani Islam)** activities in schools.
+This system helps administrators manage member data and attendance records efficiently, replacing manual and paper-based processes.
 
-## ✨ Features
+## 🎯 Project Objectives
 
-* 🔐 User authentication (Admin & Member)
-* 👥 Member management (name, class, role)
-* 📅 Attendance tracking for Rohis sessions
-* 📊 Attendance history per member
-* 🧑‍💼 Admin dashboard
-* 📂 Simple and clean web interface
+* Digitize Rohis member and attendance management
+* Improve accuracy and accessibility of attendance data
+* Practice real-world web development using Python and Flask
+* Apply database design and authentication concepts in a practical project
 
-## 🛠️ Tech Stack
+## ✨ Key Features
+
+* 🔐 Secure login system (Admin & Member)
+* 👥 Rohis member management
+* 📅 Attendance recording for Rohis activities
+* 📊 Attendance history view (admin access)
+* 🧑‍💼 Admin dashboard for monitoring data
+* 📂 Simple and structured user interface
+
+## 🛠️ Technologies Used
 
 * **Backend:** Python (Flask)
 * **Frontend:** HTML, CSS, Jinja2
@@ -36,30 +44,64 @@ A web-based **Rohis (Rohani Islam) Management System** designed to help administ
 └── README.md
 ```
 
+## 🚀 Installation Guide
 
-## 🎯 Purpose
+1. Clone this repository
 
-This project was created as a **passion project** to help Rohis organizations manage attendance and members more effectively while practicing real-world web development skills.
+```bash
+git clone https://github.com/yourusername/rohis-management-system.git
+cd rohis-management-system
+```
 
-## 🧠 What I Learned
+2. Create and activate a virtual environment
 
-* Flask routing and templating
-* User authentication & authorization
-* Database design with SQLAlchemy
-* Building CRUD-based web apps
-* Structuring a real project
+```bash
+python -m venv venv
+source venv/bin/activate   # macOS / Linux
+venv\Scripts\activate      # Windows
+```
 
-## 📌 Future Improvements
+3. Install required dependencies
 
-* Export attendance to Excel/PDF
-* Attendance statistics & charts
-* Role-based permissions
-* Mobile-friendly UI
-* QR Code attendance system
+```bash
+pip install -r requirements.txt
+```
 
-## 👤 Author
+4. Run the application
 
-Dadarzz
+```bash
+python app.py
+```
+
+5. Open the application in your browser
+
+```
+http://127.0.0.1:5000
+```
+
+## 🧠 Learning Outcomes
+
+Through this project, the developer gained experience in:
+
+* Flask routing and template rendering
+* User authentication and access control
+* Relational database management using SQLAlchemy
+* Building CRUD-based web applications
+* Structuring and documenting a software project
+
+## 📈 Future Development Plans
+
+* Attendance data export (Excel / PDF)
+* Attendance analytics and statistics
+* Role-based permission system
+* Mobile-responsive user interface
+* QR Code–based attendance system
+
+## 👤 Developer
+
+**Your Name**
+Student | Aspiring Software & AI Engineer
+
 ---
-Haidar Ali Fawwaz Nasirodin
-⭐ Feel free to fork, modify, and improve this project!
+
+This project was developed as a **school project and personal portfolio**, demonstrating practical application of web development concepts.
