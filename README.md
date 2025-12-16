@@ -101,6 +101,7 @@ Through this project, the developer gained experience in:
 **Dadarzz**
 ---
 Haidar Ali Fawwaz Nasirodin
+
 This project was developed as a **school project and personal portfolio**, demonstrating practical application of web development concepts.
 
 ## ⚠️ Notes & Limitations
