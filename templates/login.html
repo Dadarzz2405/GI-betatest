@@ -10,6 +10,19 @@
             <p class="text-muted">Please login to continue</p>
         </div>
 
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              {% set alert_class = 'alert-danger' if category == 'error' else 'alert-' + category %}
+              <div class="alert {{ alert_class }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
         <form method="POST" class="wow fadeInUp" data-wow-delay="0.2s">
             <div class="mb-3">
                 <label class="form-label fw-medium">School Email</label>

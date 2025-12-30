@@ -40,7 +40,7 @@ def login():
                 else:
                     return redirect(url_for('dashboard_member'))
         else:
-            return "Invalid credentials"
+            flash('Invalid email or password', 'error')
         
     return render_template('login.html')
 
@@ -116,7 +116,7 @@ def create_session():
 @login_required
 def attendance_mark():
     if current_user.role not in ['admin', 'ketua', 'pembina']:
-        return "Access denied"
+        return redirect(url_for('invalid_credential'))
     
     sessions = Session.query.all()
     members = User.query.filter_by(role='member').all()  
@@ -176,8 +176,7 @@ def attendance_history():
 @login_required
 def attendance_history_admin():
     if current_user.role not in ['admin', 'ketua', 'pembina']:
-        return "Access denied"
-    
+        return redirect(url_for('invalid_credential')) 
     users = User.query.filter(User.role=='member').all()
     return render_template('attendance_history_admin.html', users=users)
 
@@ -185,7 +184,7 @@ def attendance_history_admin():
 @login_required
 def attendance_history_admin_view(user_id):
     if current_user.role not in ['admin', 'ketua', 'pembina']:
-        return "Access denied"
+        return redirect(url_for('invalid_credential'))
     
     selected_user = User.query.get_or_404(user_id)
 
