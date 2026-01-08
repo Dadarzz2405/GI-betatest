@@ -1,6 +1,13 @@
 from groq import Groq
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
-GROQ_API_KEY = "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"  # keep private
+# Load API key from environment (or .env). Use the literal name 'API_KEY'.
+GROQ_API_KEY = os.getenv('API_KEY')
+if not GROQ_API_KEY:
+    raise RuntimeError("GROQ API key not set. Set API_KEY in your environment or in a .env file")
+
 client = Groq(api_key=GROQ_API_KEY)
 
 SYSTEM_PROMPT = """
