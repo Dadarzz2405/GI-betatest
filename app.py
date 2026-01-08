@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
@@ -7,12 +7,17 @@ from models import db, User, Session, Attendance
 from datetime import datetime, date
 from ummalqura.hijri_date import HijriDate
 import json
+from werkzeug.utils import secure_filename
+from ai import call_chatbot_groq
+
+UPLOAD_FOLDER = 'static/uploads/profiles'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'c0585ef7ad68d55b7fd83abf82d9e93cbd3af7bfb6702710f55c4b16e3fb0a74'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
-
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db.init_app(app)
 bcrypt = Bcrypt(app)
 
@@ -231,6 +236,27 @@ def change_password():
                 return redirect(url_for('dashboard_member'))
     return render_template('change_password.html')
 
+@app.route("/profile/upload_pfp", methods=['POST'])
+@login_required
+def upload_pfp():
+    file = request.files.get('pfp')
+
+    if not file or file.filename == '':
+        flash('No file selected', 'error')
+        return redirect(url_for('profile'))
+    if not allowed_file(file.filename):
+        flash('Invalid file type. Allowed types: png, jpg, jpeg, webp', 'error')
+        return redirect(url_for('profile'))
+    
+    ext = file.filename.rsplit('.', 1)[1].lower()
+    filename = f"user_{current_user.id}.{ext}"
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(filepath)
+    current_user.profile_picture = filename
+    db.session.commit()
+    flash('Profile picture updated successfully', 'success')
+    return redirect(url_for('profile'))
+
 ISLAMIC_HOLIDAYS = {
     # Muharram
     "01-01": "Islamic New Year (1 Muharram)",
@@ -273,13 +299,25 @@ ISLAMIC_HOLIDAYS = {
     "12-13": "Days of Tashreeq",
 }
 
+@app.route("/calendar")
+@login_required
+def calendar():
+    return render_template("calendar.html")
+
 def get_hijri_date(gregorian_date):
     try:
-        g_date = datetime.strptime(gregorian_date, "%Y-%m-%d")
-        h_date = HijriDate.from_gregorian(g_date.year, g_date.month, g_date.day, gr=True)
-        return f"{h_date.day} {h_date.month_name()} {h_date.year} H"
-    except ValueError:
-        return "Invalid date"
+        g = datetime.strptime(gregorian_date, "%Y-%m-%d").date()
+        h = HijriDate(g.year, g.month, g.day, gr=True)
+        return f"{h.day} {h.month_name()} {h.year} H"
+    except Exception:
+        return ""
+
+
+def get_hijri_key_from_gregorian(g_date: date):
+    h = HijriDate(g_date.year, g_date.month, g_date.day, gr=True)
+    return f"{h.month:02d}-{h.day:02d}", h
+
+
     
 @app.route('/api/dashboard_calendar')
 @login_required
@@ -287,60 +325,65 @@ def api_dashboard_calendar():
     sessions = Session.query.all()
     calendar_events = []
 
+    # Rohis sessions
     for session in sessions:
         hijri_date = get_hijri_date(session.date)
-        title = f"{session.name} ({hijri_date})"
         calendar_events.append({
-            'title': title,
+            'title': f"{session.name} ({hijri_date})",
             'start': session.date,
             'extendedProps': {
-                'description' : getattr(session, 'description', ''),
                 'type': 'rohis_session'
             }
         })
 
+    # Islamic holidays (FIXED)
     today = date.today()
-    year = today.year
-    for date_str, holiday_name in ISLAMIC_HOLIDAYS.items():
-        full_date = f"{year}-{date_str}"
-        try:
-            hijri_date = get_hijri_date(full_date)
-            title = f"{holiday_name} ({hijri_date})"
-            calendar_events.append({
-                'title': title,
-                'start': full_date,
-                'backgroundColor': '#4CAF50',
-                'borderColor': '#4CAF50',
-                'textColor': 'white',
-                'extendedProps': {
-                    'description': holiday_name,
-                    'type': 'islamic_holiday'
-                }
-            })    
-        except ValueError:
-            continue
+    start_year = today.year - 1
+    end_year = today.year + 1
 
-        next_year = year + 1
-        next_full_date = f"{next_year}-{date_str}"
-        try:
-            next_hijri_date = get_hijri_date(next_full_date)
-            title = f"{holiday_name} ({next_full_date}/{next_hijri_date})"
+    current = date(start_year, 1, 1)
+    end = date(end_year, 12, 31)
+
+    while current <= end:
+        hijri_key, hijri = get_hijri_key_from_gregorian(current)
+
+        if hijri_key in ISLAMIC_HOLIDAYS:
             calendar_events.append({
-                'title': title,
-                'start': next_full_date,
-                'backgroundColor': '#4CAF50',
-                'borderColor': '#4CAF50',
-                'textColor': 'white',
+                'title': f"{ISLAMIC_HOLIDAYS[hijri_key]} ({hijri.day} {hijri.month_name} {hijri.year} H)",
+                'start': current.isoformat(),
+                'allDay': True,
+                'backgroundColor': '#2e7d32',
+                'borderColor': '#2e7d32',
+                'textColor': '#ffffff',
                 'extendedProps': {
-                    'description': holiday_name,
-                    'type': 'islamic_holiday'
+                    'type': 'islamic_holiday',
+                    'hijri': f"{hijri.day} {hijri.month_name} {hijri.year} H"
                 }
             })
-        except ValueError:
-            continue
 
-    return {'events': calendar_events}
+        current = current.fromordinal(current.toordinal() + 1)
+    return calendar_events
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+@app.route("/chat", methods=["POST"])
+@login_required
+def chat():
+    data = request.get_json()
+    user_message = data.get("message", "").strip()
+
+    if not user_message:
+        return jsonify({"reply": "Please type a question."})
+
+    try:
+        reply = call_chatbot_groq(user_message)
+    except Exception as e:
+        print("CHATBOT ERROR:", e)
+        reply = "Error occurred. Check server logs."
+
+
+    return jsonify({"reply": reply})
 
 if __name__ == '__main__':
     with app.app_context():

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Rohis Attendance{% endblock %}</title>
 
-```
 <!-- Bootstrap & Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -22,9 +21,9 @@
 
 <!-- Custom CSS -->
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
 
 {% block head %}{% endblock %}
-```
 
 </head>
 
@@ -36,7 +35,6 @@
         <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>Rohis</h2>
     </a>
 
-```
 <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#navCollapse">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -55,7 +53,6 @@
     {% endif %}
   </ul>
 </div>
-```
 
   </div>
 </nav>
@@ -75,7 +72,25 @@
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
     <i class="bi bi-arrow-up"></i>
 </a>
+{% if current_user.is_authenticated %}
+  <!-- Floating Chat Button -->
+  <div id="chat-toggle">💬</div>
 
+  <!-- Chat Box -->
+  <div id="chat-box">
+    <div id="chat-header">
+      <span>Ask Rohis</span>
+      <button id="chat-close">✖</button>
+    </div>
+
+    <div id="chat-messages"></div>
+
+    <div id="chat-input">
+      <input type="text" id="user-input" placeholder="Ask about Islam..." />
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+{% endif %}
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -94,7 +109,7 @@ $('.back-to-top').click(function () {
     return false;
 });
 </script>
-
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
 {% block scripts %}{% endblock %}
 
 </body>

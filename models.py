@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(50), nullable=False) 
     must_change_password = db.Column(db.Boolean, default=True)  # Force change
     class_name = db.Column(db.String(50))
+    profile_picture = db.Column(db.String(255), default='default.png')
 
 class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True)

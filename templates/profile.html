@@ -13,6 +13,38 @@
             <h6 class="fw-medium bg-light text-dark py-2 px-3 rounded border">{{ current_user.class_name or 'Not specified' }}</h6>
         </div>
 
+        <div class="text-center mb-4 wow fadeInUp" data-wow-delay="0.2s">
+
+            <img
+                 src="{{ url_for('static', filename='uploads/profiles/' ~ (current_user.profile_picture or 'default.png')) }}"
+                class="rounded-circle border shadow"
+                width="130"
+                height="130"
+                style="object-fit: cover;"
+                alt="Profile Picture"
+            >
+
+            <form
+                method="POST"
+                action="{{ url_for('upload_pfp') }}"
+                enctype="multipart/form-data"
+                class="mt-3"
+            >
+                <input
+                    type="file"
+                    name="pfp"
+                    accept="image/*"
+                    class="form-control mb-2"
+                    required
+                >
+                <button class="btn btn-sm btn-primary">
+                    Upload Profile Picture
+                </button>
+            </form>
+
+        </div>
+
+
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
